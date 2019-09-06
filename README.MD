@@ -9,7 +9,7 @@
 
 #### Install libs
 ```bash
-pip install -r
+pip install -r requirements.txt
 ```
 
 #### Run cmd
