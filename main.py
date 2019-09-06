@@ -7,8 +7,8 @@ import aiohttp
 async def request(session, url):
     try:
         async with session.get(url) as response:
-            await response.text()
-            return True
+            st_code = response.status
+            return 199 < st_code < 300
     except aiohttp.ClientConnectorError:
         return False
 
@@ -28,6 +28,7 @@ async def main():
         tasks.append(task)
 
     for task in tasks:
+        await task
         c += await task
 
     print('Accepted:   {}'.format(c))
