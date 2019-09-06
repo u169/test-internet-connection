@@ -4,18 +4,18 @@ import arguments
 import aiohttp
 
 
-async def request(session, url):
+async def request(session, url, timeout):
     try:
-        async with session.get(url) as response:
+        async with session.get(url, timeout=timeout) as response:
             st_code = response.status
             return 199 < st_code < 300
-    except aiohttp.ClientConnectorError:
+    except (aiohttp.ClientConnectorError, asyncio.TimeoutError):
         return False
 
 
-async def session_request(url):
+async def session_request(url, timeout):
     async with aiohttp.ClientSession() as session:
-        return await request(session, url)
+        return await request(session, url, timeout)
 
 
 async def main():
@@ -24,7 +24,7 @@ async def main():
 
     tasks = []
     for _ in range(args.repeats):
-        task = asyncio.create_task(session_request(args.url))
+        task = asyncio.create_task(session_request(args.url, args.timeout))
         tasks.append(task)
 
     for task in tasks:
